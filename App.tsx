@@ -26,6 +26,23 @@ const App = () => {
 
   useEffect(() => {
     registerBackgroundFetch(repository);
+
+    // Procesar fragmentos pendientes al iniciar la app
+    const processPendingFragments = async () => {
+      console.log('Verificando fragmentos pendientes al iniciar la app...');
+      const pendingFragments = repository.getPendingFragments();
+      console.log(
+        `Fragmentos pendientes encontrados: ${pendingFragments.length}`,
+      );
+
+      for (const fragment of pendingFragments) {
+        console.log(`Procesando fragmento pendiente: ${fragment.path}`);
+        const uploadCommand = new UploadFragmentCommand(fragment, repository);
+        await uploadCommand.execute();
+      }
+    };
+
+    processPendingFragments();
   }, [repository]);
 
   /**
